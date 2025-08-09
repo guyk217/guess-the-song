@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>נחש את השיר • משחק</title>
+<style>
+  :root{
+    --bg1:#ffdde1; --bg2:#ee9ca7; --card:#fff; --ink:#222; --muted:#6b7280;
+    --btn:#ffd166; --btn2:#8ecae6; --ok:#16a34a; --bad:#ef4444; --r:18px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; min-height:100vh; background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    font-family:system-ui,Segoe UI,Heebo,Roboto,sans-serif; color:var(--ink);
+    display:flex; align-items:center; justify-content:center; padding:18px;
+  }
+  .app{ width:min(960px,100%); background:rgba(255,255,255,.92); border-radius:var(--r); box-shadow:0 10px 30px rgba(0,0,0,.15); overflow:hidden }
+  header{ display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,.2)) }
+  h1{ margin:0; font-size:20px }
+  .pill{ font-size:12px; background:#eef2ff; color:#1b3b9b; padding:4px 8px; border-radius:999px }
+  .top-row{ display:grid; grid-template-columns: 140px 1fr; gap:12px; padding:0 16px 12px }
+  .album{ position:relative; border-radius:16px; overflow:hidden; height:140px; background: linear-gradient(135deg, #9b5de5, #f15bb5, #fee440, #00bbf9, #00f5d4) }
+  .album .label{ position:absolute; inset:8px; background:rgba(255,255,255,.7); border-radius:12px; padding:8px; font-weight:700 }
+  .album.blur .label{ filter: blur(6px) }
+  .meta{ display:flex; gap:10px; align-items:center; justify-content:space-between; background:#fff; border:1px dashed #d1d5db; border-radius:14px; padding:10px 12px }
+  .meta .title{ font-weight:800 }
+  .meta .blurred{ filter: blur(5px) }
+  .game{ background:#fff; border-top:1px solid #eee; padding:16px }
+  .hints{ display:grid; grid-template-columns:1fr; gap:10px; margin-top:6px }
+  .hint{ background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; min-height:56px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; transition:.2s ease }
+  .hint.revealed{ background:#fff }
+  .hint .idx{ color:var(--muted); font-size:12px }
+  .hint .txt{ flex:1; margin:0 10px }
+  .controls{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px }
+  input[type="text"]{ flex:1 1 280px; padding:12px 14px; border:1px solid #d1d5db; border-radius:12px; font-size:16px }
+  button{ border:0; border-radius:12px; padding:12px 14px; font-size:16px; cursor:pointer; transition:.2s ease; background:var(--btn) }
+  button.secondary{ background:#e5e7eb } button.info{ background:var(--btn2) }
+  button.ok{ background:#86efac } button.danger{ background:#fecaca }
+  button:disabled{ opacity:.6; cursor:not-allowed }
+  .status{ margin-top:10px; font-weight:700; text-align:center }
+  .status.ok{ color:var(--ok) } .status.bad{ color:var(--bad) }
+  footer{ display:flex; justify-content:space-between; align-items:center; padding:10px 16px; color:#374151; font-size:12px }
+  /* flip */
+  .flip{ animation:flip .6s ease both; transform-origin:center }
+  @keyframes flip{ 0%{transform:rotateX(0);opacity:1} 50%{transform:rotateX(90deg);opacity:0} 51%{opacity:0} 100%{transform:rotateX(0);opacity:1} }
+  @media (max-width:720px){ .top-row{ grid-template-columns:110px 1fr } .album{ height:110px } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <h1>🎵 נחש את השיר — משחק</h1>
+    <div class="pill" id="userPill">אורח</div>
+  </header>
+
+  <div class="top-row">
+    <div class="album blur" id="albumCard">
+      <div class="label">Album: <b id="albumName">—</b></div>
+    </div>
+    <div class="meta">
+      <div class="title"><span id="metaArtist" class="blurred">אמן</span> • <span id="metaYear" class="blurred">שנה</span></div>
+      <button id="btnMeta" class="info" title="חשוף אמן+שנה">🔎 תגלה לי</button>
+    </div>
+  </div>
+
+  <section class="game">
+    <div id="hints" class="hints"></div>
+    <div class="controls">
+      <input id="guess" placeholder="שם השיר…" autocomplete="off">
+      <button id="btnGuess">נחש</button>
+      <button id="btnReveal">עוד רמז</button>
+      <button id="btnNext" class="secondary">שיר הבא</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <footer>
+    <div id="progress">שיר 1 / 1 • רמזים: 0/4</div>
+    <a href="index.html" class="pill" style="text-decoration:none">⬅ חזרה לשלבים</a>
+  </footer>
+</div>
+
+<script>
+const LS_PROGRESS_PREFIX = 'gts_progress_';
+const $ = s=>document.querySelector(s);
+const qs = new URLSearchParams(location.search);
+const levelId = qs.get('level') || '';
+const configFile = qs.get('file') || '';
+const user = qs.get('user') || 'אורח';
+
+const hintsEl = $('#hints'), guessEl = $('#guess'), statusEl = $('#status');
+const btnGuess = $('#btnGuess'), btnReveal = $('#btnReveal'), btnNext = $('#btnNext'), btnMeta = $('#btnMeta');
+const albumCard = $('#albumCard'), albumName = $('#albumName'), metaArtist = $('#metaArtist'), metaYear = $('#metaYear');
+const userPill = $('#userPill'), progressEl = $('#progress');
+
+let SONGS = [];     // נטען מהקונפיג
+let i = 0;          // אינדקס שיר בתוך הקונפיג
+let revealed = 0;   // כמה רמזים שורות נפתחו (0..4)
+let metaRevealed = false;
+let endedSong = false; // האם הסבב של השיר נגמר
+let lastWrongAfterThird = false; // אחרי רמז 3 (שפתח גם את 4) היה ניחוש נוסף
+
+userPill.textContent = user || 'אורח';
+
+function norm(s){ return (s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]+/gu,''); }
+function current(){ return SONGS[i]; }
+function progressKey(u){ return LS_PROGRESS_PREFIX + (u||'guest'); }
+function getProgress(u){ try{ return JSON.parse(localStorage.getItem(progressKey(u))||'{}'); }catch(e){ return {}; } }
+function setProgress(u,obj){ localStorage.setItem(progressKey(u), JSON.stringify(obj)); }
+
+async function fetchJSON(url){
+  const res = await fetch(url, {cache:'no-store'});
+  if(!res.ok) throw new Error('Fetch failed: '+url);
+  return res.json();
+}
+
+async function loadConfig(){
+  // אם הגענו מ-index עם file מלא — נטען אותו
+  if(configFile){
+    const cfg = await fetchJSON(configFile);
+    return cfg;
+  }
+  // אחרת נאתר לפי manifest
+  const m = await fetchJSON('configs/manifest.json');
+  const lv = m.levels.find(x=>x.id===levelId);
+  if(!lv) throw new Error('Level not found in manifest');
+  const cfg = await fetchJSON(lv.file);
+  return cfg;
+}
+
+function lineBox(idx, text, revealedNow){
+  const div = document.createElement('div');
+  div.className = 'hint' + (revealedNow ? ' revealed':'');
+
+  const left = document.createElement('span');
+  left.className = 'idx';
+  left.textContent = (idx<3? `רמז ${idx+1}` : 'רמז 4');
+
+  const mid = document.createElement('div');
+  mid.className = 'txt';
+  mid.textContent = revealedNow ? text : '???';
+
+  div.append(left, mid);
+  return div;
+}
+
+function updateProgressBar(){
+  progressEl.textContent = `שיר ${i+1} / ${SONGS.length} • רמזים: ${Math.min(revealed,4)}/4`;
+}
+
+function renderSong(){
+  const s = current();
+  statusEl.textContent = '';
+  endedSong = false;
+  lastWrongAfterThird = false;
+  revealed = 0;
+  metaRevealed = false;
+
+  // כותרת עליונה מטושטשת
+  albumName.textContent = s.album || '—';
+  albumCard.classList.add('blur');
+  metaArtist.textContent = s.artist;
+  metaYear.textContent = s.year;
+  metaArtist.classList.add('blurred');
+  metaYear.classList.add('blurred');
+
+  btnMeta.disabled = false;
+  btnReveal.disabled = false;
+  btnGuess.disabled = false;
+  guessEl.disabled = false;
+  btnReveal.textContent = 'עוד רמז';
+
+  // רמזי שורות — מציגים את התרגום ההפוך
+  const show = s.linesTranslated;   // התצוגה היא תמיד התרגום
+  hintsEl.innerHTML = '';
+  for(let k=0;k<4;k++){
+    hintsEl.appendChild(lineBox(k, show[k], false));
+  }
+
+  updateProgressBar();
+  guessEl.value='';
+  guessEl.focus();
+}
+
+function revealOne(){
+  if(endedSong) return;
+  const s = current();
+  const show = s.linesTranslated;
+  // כלל: כשמגיעים לרמז 3 — הוא פותח גם את 4, ועדיין יש ניחוש אחד נוסף
+  if(revealed < 2){
+    revealed++;
+  }else if(revealed === 2){
+    // פתיחה של 3 וגם 4 יחד
+    revealed = 4;
+    // שינוי כפתור "עוד רמז" ל"תגלה לי"
+    btnReveal.textContent = 'תגלה לי';
+    lastWrongAfterThird = false; // טרם ניחש אחרי הפתיחה הכפולה
+  }else if(revealed === 4){
+    // "תגלה לי" → חושף מטא ומסיים כהפסד
+    revealMeta(true);
+    endSong(false, `❌ נגמרו הרמזים. השיר היה: “${s.title}” (${s.artist}, ${s.year}).`);
+    return;
+  }
+
+  // עדכון התצוגה
+  for(let k=0;k<4;k++){
+    const box = hintsEl.children[k];
+    const txt = box.querySelector('.txt');
+    const vis = (k < revealed);
+    box.classList.toggle('revealed', vis);
+    txt.textContent = vis ? show[k] : '???';
+  }
+  updateProgressBar();
+}
+
+function revealMeta(causedByGiveUp=false){
+  if(metaRevealed) return;
+  metaRevealed = true;
+  albumCard.classList.remove('blur');
+  metaArtist.classList.remove('blurred');
+  metaYear.classList.remove('blurred');
+  if(causedByGiveUp){
+    statusEl.className='status bad';
+    statusEl.textContent='רמז עליון נחשף — הפסד בסבב הזה.';
+  }
+}
+
+function flipToOriginal(){
+  // אנימציה שמחליפה כל שורת תרגום למקור (או להפך)
+  const s = current();
+  const orig = s.linesOriginal;
+  for(let k=0;k<4;k++){
+    const box = hintsEl.children[k];
+    const txt = box.querySelector('.txt');
+    txt.classList.add('flip');
+    setTimeout(()=>{ txt.textContent = orig[k]; }, 280);
+    setTimeout(()=>{ txt.classList.remove('flip'); }, 650);
+  }
+}
+
+function onGuess(){
+  if(endedSong) return;
+  const s = current();
+  const val = guessEl.value.trim();
+  if(!val) return;
+  const g = norm(val);
+  const candidates = [s.title, ...(s.altTitles||[])].map(norm);
+  const ok = candidates.includes(g);
+
+  if(ok){
+    endSong(true, `✅ נכון! “${s.title}” (${s.artist}, ${s.year}).`);
+  }else{
+    // ניחוש שגוי:
+    if(revealed === 4){
+      // כבר אחרי פתיחת 3+4: שגיאה → לא חושפים שורה (אין מה), רק משנים כפתור ל"תגלה לי" אם לא שם
+      btnReveal.textContent = 'תגלה לי';
+      lastWrongAfterThird = true;
+      statusEl.className='status';
+      statusEl.textContent='לא נכון. אפשר ללחוץ "תגלה לי".';
+    }else{
+      revealOne();
+      statusEl.className='status';
+      statusEl.textContent = 'לא נכון — רמז נוסף נפתח.';
+    }
+  }
+}
+
+function endSong(win, msg){
+  endedSong = true;
+  statusEl.textContent = msg;
+  statusEl.className = 'status ' + (win ? 'ok' : 'bad');
+  btnGuess.disabled = true;
+  guessEl.disabled = true;
+  // אפקט היפוך טקסט
+  flipToOriginal();
+  // אם ניצחנו — אל תחשוף מטא; אם הפסדנו — כבר נחשף (ב-‘תגלה לי’)
+  if(win){
+    // כלום
+  }
+}
+
+function nextSong(){
+  if(i < SONGS.length-1){
+    i++;
+    renderSong();
+  }else{
+    // סימון השלב כהושלם למשתמש
+    const prog = getProgress(user);
+    prog[levelId] = true;
+    setProgress(user, prog);
+    alert('כל השירים בשלב הושלמו! ✅ חוזרים למסך השלבים');
+    location.href = 'index.html';
+  }
+}
+
+btnReveal.addEventListener('click', revealOne);
+btnMeta.addEventListener('click', ()=>{ revealMeta(true); endSong(false, `❌ ויתור. השיר: “${current().title}” (${current().artist}, ${current().year}).`); });
+btnGuess.addEventListener('click', onGuess);
+guessEl.addEventListener('keydown', e=>{ if(e.key==='Enter') onGuess(); });
+btnNext.addEventListener('click', nextSong);
+
+(async function init(){
+  try{
+    const cfg = await loadConfig();
+    // כל שיר חייב לכלול: title, artist, year, album, lang, linesOriginal[4], linesTranslated[4]
+    SONGS = cfg.songs || [];
+    if(!SONGS.length) throw new Error('No songs in config');
+    i = 0;
+    renderSong();
+  }catch(err){
+    console.error(err);
+    alert('שגיאה בטעינת הקונפיגורציה. בדוק/י את המסמכים תחת configs/.');
+    location.href = 'index.html';
+  }
+})();
+</script>
+</body>
+</html>

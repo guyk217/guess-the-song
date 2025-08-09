@@ -1,24 +1,24 @@
 {
-  "title": "סט פופ 2000–2025 (EN+HE)",
+  "title": "סט פופ איכותי 2000–2025 (EN+HE)",
   "songs": [
     {
       "title": "Shape of You",
-      "altTitles": ["Shape of You"],
       "artist": "Ed Sheeran",
       "year": 2017,
       "album": "÷ (Divide)",
+      "albumArt": "configs/art/ed_sheeran_divide.jpg",
       "lang": "en",
       "linesOriginal": [
-        "Your shadow sways in the empty room",
-        "Glasses ring in a crowded bar",
-        "My heart tracks your step",
-        "We move where the rhythm pulls"
+        "Your shadow dances in an empty room",
+        "Clinking glasses write our rhythm",
+        "My pulse keeps step with yours",
+        "We follow the beat more than the map"
       ],
       "linesTranslated": [
-        "הצל שלך זז בחדר ריק",
-        "כוסות מצלצלות בבר עמוס",
-        "הלב שלי עוקב אחרי הצעד שלך",
-        "אנחנו נמשכים לאן שהקצב מוביל"
+        "הצל שלך רוקד בחדר ריק",
+        "צלצול הכוסות כותב לנו קצב",
+        "הדופק שלי מצעד לצעד שלך",
+        "אנחנו הולכים אחרי הקצב יותר מאשר אחרי המפה"
       ]
     },
     {
@@ -26,37 +26,19 @@
       "artist": "The Weeknd",
       "year": 2019,
       "album": "After Hours",
+      "albumArt": "configs/art/the_weeknd_after_hours.jpg",
       "lang": "en",
       "linesOriginal": [
-        "Neon nights paint the city",
-        "I race the streets to find you",
-        "Headlights echo like stars",
-        "I can’t see straight without you"
+        "Neon nights repaint the streets",
+        "I race the city just to see you",
+        "Headlights scatter like stars",
+        "Without you the road goes out of focus"
       ],
       "linesTranslated": [
-        "לילות ניאון צובעים את העיר",
-        "אני דוהר ברחובות כדי למצוא אותך",
-        "פנסי מכוניות נוצצים כמו כוכבים",
-        "בלעדייך המבט מטושטש"
-      ]
-    },
-    {
-      "title": "Levitating",
-      "artist": "Dua Lipa",
-      "year": 2020,
-      "album": "Future Nostalgia",
-      "lang": "en",
-      "linesOriginal": [
-        "Stardust gathers in our orbit",
-        "You spin a grin into gravity",
-        "We float where music lifts",
-        "Call it love, call it flight"
-      ],
-      "linesTranslated": [
-        "אבק כוכבים נאסף במסלול שלנו",
-        "את מחייכת ומשנה כבידה",
-        "אנחנו מרחפים כשמוזיקה מעלה",
-        "תקראי לזה אהבה, תקראי לזה טיסה"
+        "לילות הניאון צובעים מחדש את הרחובות",
+        "אני דוהר בעיר רק כדי לראות אותך",
+        "פנסי המכוניות מתפזרים כמו כוכבים",
+        "בלעדייך הכביש יוצא מפוקוס"
       ]
     },
     {
@@ -64,18 +46,19 @@
       "artist": "Adele",
       "year": 2010,
       "album": "21",
+      "albumArt": "configs/art/adele_21.jpg",
       "lang": "en",
       "linesOriginal": [
-        "Bridges burn behind the chorus",
-        "The tide drums under my feet",
-        "Your voice haunts empty halls",
-        "I could have had it all"
+        "Bridges burn behind what we sing",
+        "The floor thunders underfoot",
+        "Your voice fills the empty rooms",
+        "We almost held everything"
       ],
       "linesTranslated": [
-        "גשרים נשרפים מאחורי הפזמון",
-        "הגאות מתופפת תחת רגליי",
-        "הקול שלך רודף אולמות ריקים",
-        "יכולנו להחזיק את הכל"
+        "גשרים נשרפים מאחורי מה שאנחנו שרים",
+        "הרצפה רועמת מתחת לרגליים",
+        "הקול שלך ממלא חדרים ריקים",
+        "כמעט החזקנו הכול"
       ]
     },
     {
@@ -83,113 +66,261 @@
       "artist": "Lady Gaga",
       "year": 2009,
       "album": "The Fame Monster",
+      "albumArt": "configs/art/lady_gaga_the_fame_monster.jpg",
       "lang": "en",
       "linesOriginal": [
-        "A cold whisper in my ear",
-        "A dangerous game of hearts",
-        "I want every side of you",
-        "Fire dressed like a dance"
+        "A frost-bitten whisper near my ear",
+        "We gamble with hearts on the table",
+        "I want every version of you",
+        "Fire learns to dance in the dark"
       ],
       "linesTranslated": [
-        "לחישה קרה באוזן",
-        "משחק לבבות מסוכן",
-        "אני רוצה כל צד בך",
-        "אש מחופשת לריקוד"
+        "לחישה קפואה ליד האוזן",
+        "אנחנו מהמרים עם לבבות על השולחן",
+        "אני רוצה כל גרסה שלך",
+        "אש לומדת לרקוד בחושך"
       ]
     },
+    {
+      "title": "Levitating",
+      "artist": "Dua Lipa",
+      "year": 2020,
+      "album": "Future Nostalgia",
+      "albumArt": "configs/art/dua_lipa_future_nostalgia.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Stardust gathers in our orbit",
+        "A smile bends the rules of gravity",
+        "We float where the chorus lifts",
+        "Call it love, I call it flight"
+      ],
+      "linesTranslated": [
+        "אבק כוכבים נאסף במסלול שלנו",
+        "חיוך שמכופף את חוקי הכבידה",
+        "אנחנו מרחפים במקום שבו הפזמון מרים",
+        "תקראי לזה אהבה, אני קורא לזה טיסה"
+      ]
+    },
+    {
+      "title": "Uptown Funk",
+      "artist": "Mark Ronson feat. Bruno Mars",
+      "year": 2014,
+      "album": "Uptown Special",
+      "albumArt": "configs/art/uptown_special.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Gold shoes kiss the pavement",
+        "Streetlights drum a victory beat",
+        "Cameras pop like fingers on two",
+        "The night signs its name in brass"
+      ],
+      "linesTranslated": [
+        "נעליים מוזהבות מנשקות את המדרכה",
+        "פנסי הרחוב מתופפים קצב של ניצחון",
+        "מצלמות מקליקות כמו אצבעות על שתיים",
+        "הלילה חותם את שמו בנחושת"
+      ]
+    },
+    {
+      "title": "Toxic",
+      "artist": "Britney Spears",
+      "year": 2003,
+      "album": "In the Zone",
+      "albumArt": "configs/art/britney_in_the_zone.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Velvet danger tastes like electricity",
+        "A siren hum hides in your breath",
+        "I sip the sparkle and lose the ground",
+        "Gravity learns your name"
+      ],
+      "linesTranslated": [
+        "סכנה קטיפתית בטעם חשמל",
+        "זמזום סירנה מסתתר בנשימה שלך",
+        "אני לוגם את הניצוץ ומאבד את הקרקע",
+        "הכבידה לומדת את שמך"
+      ]
+    },
+    {
+      "title": "Firework",
+      "artist": "Katy Perry",
+      "year": 2010,
+      "album": "Teenage Dream",
+      "albumArt": "configs/art/katy_perry_teenage_dream.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Quiet nights keep a spark in their pocket",
+        "A heartbeat ready to paint the sky",
+        "When hope strikes, the air sings",
+        "Color argues with the dark"
+      ],
+      "linesTranslated": [
+        "לילות שקטים מחזיקים ניצוץ בכיס",
+        "דופק שמוכן לצבוע את השמיים",
+        "כשתקווה מציתה, האוויר שר",
+        "צבע מתווכח עם החושך"
+      ]
+    },
+    {
+      "title": "Halo",
+      "artist": "Beyoncé",
+      "year": 2008,
+      "album": "I Am... Sasha Fierce",
+      "albumArt": "configs/art/beyonce_i_am_sasha_fierce.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Light breaks through every wall",
+        "Your arms turn shelters into homes",
+        "Echoes return covered in gold",
+        "I can see your circle of light"
+      ],
+      "linesTranslated": [
+        "אור שוברים כל קיר",
+        "הזרועות שלך הופכות מחסה לבית",
+        "הדים חוזרים מצופים זהב",
+        "אני רואה את המעגל הזוהר שלך"
+      ]
+    },
+    {
+      "title": "Shake It Off",
+      "artist": "Taylor Swift",
+      "year": 2014,
+      "album": "1989",
+      "albumArt": "configs/art/taylor_swift_1989.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Noise keeps barking at the door",
+        "I spin the room into a smile",
+        "Feet write answers on the floor",
+        "Let the rhythm do the talking"
+      ],
+      "linesTranslated": [
+        "הרעש נובח על הדלת",
+        "אני מסובבת את החדר אל חיוך",
+        "רגליים כותבות תשובות על הרצפה",
+        "תני לקצב לדבר"
+      ]
+    },
+
+    // ——— Hebrew / Israeli ———
     {
       "title": "שני משוגעים",
       "artist": "עומר אדם",
       "year": 2017,
-      "album": "שני משוגעים",
+      "album": "שני משוגעים (Single)",
+      "albumArt": "configs/art/omer_adam_shnei_meshugaim.jpg",
       "lang": "he",
       "linesOriginal": [
-        "רחובות ריקים ושקטים",
-        "עיניים מספרות הכול",
-        "שני לבבות באותו קצב",
-        "עולם קטן רק לנו"
+        "רחוב לילה שמור רק לנו",
+        "מבט אחד מסביר הכול",
+        "שני לבבות סופרים פעימות יחד",
+        "עולם קטן בתוך שקט גדול"
       ],
       "linesTranslated": [
-        "Empty streets whisper",
-        "Eyes tell everything",
-        "Two hearts on one tempo",
-        "A small world just for us"
+        "A night street kept just for us",
+        "One look explains everything",
+        "Two hearts count beats together",
+        "A small world in a great hush"
       ]
     },
     {
-      "title": "קומי קומי",
-      "artist": "עדן בן זקן",
-      "year": 2018,
-      "album": "תל אביב",
+      "title": "דרך השלום",
+      "artist": "פאר טסי",
+      "year": 2014,
+      "album": "דרך השלום (Single)",
+      "albumArt": "configs/art/peer_tessi_derech_hashalom.jpg",
       "lang": "he",
       "linesOriginal": [
-        "שחר חדש קורא לנו",
-        "העיר מתמתחת באור",
-        "קפה ראשון וחיוך",
-        "בואי נרוץ ליום החדש"
+        "כביש חם שר על חלון פתוח",
+        "רדיו מספר זכרונות בקצב",
+        "שלטים קורצים לנו לחזור",
+        "הדרך מתיישרת בלב"
       ],
       "linesTranslated": [
-        "A new dawn calls us",
-        "The city stretches in light",
-        "First coffee and a smile",
-        "Let’s run into the day"
-      ]
-    },
-    {
-      "title": "אם תרצי",
-      "artist": "דודו אהרון",
-      "year": 2021,
-      "album": "שקט שנשאר",
-      "lang": "he",
-      "linesOriginal": [
-        "כוכבים נופלים איתנו",
-        "ידיים שלובות בלי פחד",
-        "העתיד כותב את שמנו",
-        "כל צעד מקרב אותנו"
-      ],
-      "linesTranslated": [
-        "Stars fall with us",
-        "Hands held without fear",
-        "The future writes our names",
-        "Every step draws us closer"
+        "A hot road sings through an open window",
+        "The radio retells memories in tempo",
+        "Signs wink for us to come back",
+        "The way straightens inside the heart"
       ]
     },
     {
       "title": "טודו בום",
-      "artist": "סטטיק ובן-אל תבורי",
+      "artist": "סטטיק ובן־אל תבורי",
       "year": 2017,
-      "album": "לאסורא",
+      "album": "טודו בום (Single)",
+      "albumArt": "configs/art/static_benel_todo_boom.jpg",
       "lang": "he",
       "linesOriginal": [
         "קצב חם שובר את הרצפה",
-        "שמש ים וצעדים מהירים",
-        "חיוך שמדליק את הרחוב",
+        "שמש ים ושמחה ברחוב",
+        "חיוך מדליק את העיר",
         "זה בא בבום ולא עוצר"
       ],
       "linesTranslated": [
-        "Hot beat cracks the floor",
-        "Sun, sea and quick steps",
-        "A smile lights the street",
-        "It hits with a boom and rolls on"
+        "A hot beat cracks the floor",
+        "Sun, sea and joy in the street",
+        "A smile lights up the city",
+        "It hits with a boom and won’t stop"
       ]
     },
     {
-      "title": "מסטיקה",
-      "artist": "אנה זק",
-      "year": 2023,
-      "album": "מסטיקה",
+      "title": "שלמים",
+      "artist": "עדן בן זקן",
+      "year": 2019,
+      "album": "שלמים (Single)",
+      "albumArt": "configs/art/eden_ben_zaken_shlemim.jpg",
       "lang": "he",
       "linesOriginal": [
-        "פופ מתוק על השפתיים",
-        "לילה צבעוני מהבהב",
-        "מילים נדבקות ללב",
-        "רוקדים בלי לחשוב"
+        "בין כתמי העיר מצאנו שקט",
+        "ידיים סוגרות מעגל עדין",
+        "היום תופר פינות של אתמול",
+        "לב שלם לומד לנשום"
       ],
       "linesTranslated": [
-        "Sweet pop on my lips",
-        "A flashing, colorful night",
-        "Words that stick to the heart",
-        "We dance without thinking"
+        "Between city stains we found calm",
+        "Hands complete a gentle circle",
+        "Today stitches corners of yesterday",
+        "A whole heart learns to breathe"
+      ]
+    },
+    {
+      "title": "Toy",
+      "artist": "Netta",
+      "year": 2018,
+      "album": "Toy (Single)",
+      "albumArt": "configs/art/netta_toy.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "Clicks and clucks flip the room bright",
+        "Confidence struts in neon steps",
+        "Laughing mirrors bounce the sound",
+        "I tune the world to my voice"
+      ],
+      "linesTranslated": [
+        "קְלִיקִים וקולות שוברים את החדר לאור",
+        "ביטחון הולך בצעדי ניאון",
+        "מראות צוחקות מחזירות את הצליל",
+        "אני מכוונת את העולם לקול שלי"
+      ]
+    },
+    {
+      "title": "Unicorn",
+      "artist": "Noa Kirel",
+      "year": 2023,
+      "album": "Eurovision Single",
+      "albumArt": "configs/art/noa_kirel_unicorn.jpg",
+      "lang": "en",
+      "linesOriginal": [
+        "A spark on armor made of glitter",
+        "Eyes draw lightning on the floor",
+        "I twist the storm into a crown",
+        "Power learns a softer roar"
+      ],
+      "linesTranslated": [
+        "ניצוץ על שריון מצופה נצנצים",
+        "עיניים מציירות ברק על הרצפה",
+        "אני מסובבת את הסערה לכתר",
+        "כוח לומד לשאוג ברוך"
       ]
     }
   ]

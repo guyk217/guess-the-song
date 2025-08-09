@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎵 נחש את השיר 🎵</title>
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 20px;
+    min-height: 100vh;
+  }
+  .game {
+    background: rgba(0,0,0,0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    padding: 20px;
+    width: min(500px, 100%);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+  h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+  }
+  .hint {
+    background: rgba(255,255,255,0.15);
+    padding: 12px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    min-height: 50px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+  }
+  .hint.revealed {
+    background: rgba(0,0,0,0.5);
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+  }
+  input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+  }
+  button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    background: #ffcc70;
+    color: #000;
+    transition: transform 0.2s;
+  }
+  button:hover {
+    transform: scale(1.05);
+  }
+  .message {
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div class="game">
+  <h1>🎵 נחש את השיר 🎵</h1>
+  <div id="hints"></div>
+  <div class="controls">
+    <input id="guess" placeholder="הקלד את שם השיר...">
+    <button id="check">בדוק</button>
+    <button id="reveal">רמז+</button>
+  </div>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+const songs = [
+  // אנגלית
+  {title:"Shape of You", artist:"Ed Sheeran", year:2017, lang:"en", hints:[
+    "הצל שלך רוקד בחדר ריק", 
+    "כוסות נוקשות בבר עמוס",
+    "הלב שלי רודף את הצעד שלך"
+  ]},
+  {title:"Rolling in the Deep", artist:"Adele", year:2010, lang:"en", hints:[
+    "הגשר הבוער מאחורינו",
+    "הים סוער מתחתיי",
+    "הקול שלך רודף אותי בחלום"
+  ]},
+  {title:"Blinding Lights", artist:"The Weeknd", year:2019, lang:"en", hints:[
+    "עיר נוצצת בשעת לילה",
+    "האורות מסנוורים את ליבי",
+    "הכבישים ריקים בלעדייך"
+  ]},
+  {title:"Bad Romance", artist:"Lady Gaga", year:2009, lang:"en", hints:[
+    "לחישה קרה באוזן שלי",
+    "משחק מסוכן של אהבה",
+    "רוצה כל צד בך"
+  ]},
+  {title:"Levitating", artist:"Dua Lipa", year:2020, lang:"en", hints:[
+    "כוכבים רוקדים סביבנו",
+    "רוח קלה סוחפת אותנו מעלה",
+    "כל העולם מסתובב איתך"
+  ]},
+
+  // עברית
+  {title:"מתגעגע", artist:"עומר אדם", year:2019, lang:"he", hints:[
+    "לילות קרים בלעדייך",
+    "השמש זורחת אך אני בצל",
+    "הים שומר את הסוד שלנו"
+  ]},
+  {title:"שני משוגעים", artist:"עומר אדם", year:2017, lang:"he", hints:[
+    "רחובות ריקים ושקטים",
+    "עיניים שמספרות הכל",
+    "שני לבבות באותו קצב"
+  ]},
+  {title:"קומי קומי", artist:"עדן בן זקן", year:2018, lang:"he", hints:[
+    "שחר חדש קורא לנו",
+    "העיר מתעוררת לאט",
+    "הקפה מריח את החיוך שלך"
+  ]},
+  {title:"אם תרצי", artist:"דודו אהרון", year:2021, lang:"he", hints:[
+    "הכוכבים נופלים איתנו",
+    "ידיים שלובות בלי פחד",
+    "העתיד מצייר אותנו"
+  ]},
+  {title:"כל הזמן הזה", artist:"נועה קירל", year:2022, lang:"he", hints:[
+    "שעה אחרי חצות",
+    "העיר רועדת מהקצב",
+    "הלב שלי לא מפסיק"
+  ]}
+];
+
+let currentIndex = 0;
+let revealed = 0;
+
+function showHints() {
+  const hintsDiv = document.getElementById('hints');
+  hintsDiv.innerHTML = '';
+  for (let i = 0; i < 4; i++) {
+    const div = document.createElement('div');
+    div.className = 'hint' + (i < revealed ? ' revealed' : '');
+    if (i < revealed) {
+      if (i < 3) {
+        div.textContent = songs[currentIndex].hints[i];
+      } else {
+        div.textContent = `אמן: ${songs[currentIndex].artist} | שנה: ${songs[currentIndex].year}`;
+      }
+    } else {
+      div.textContent = '???';
+    }
+    hintsDiv.appendChild(div);
+  }
+}
+
+function checkGuess() {
+  const guess = document.getElementById('guess').value.trim().toLowerCase();
+  const message = document.getElementById('message');
+  if (guess === songs[currentIndex].title.toLowerCase()) {
+    message.textContent = 'נכון! 🎉';
+  } else {
+    revealHint();
+  }
+}
+
+function revealHint() {
+  if (revealed < 4) {
+    revealed++;
+    showHints();
+    if (revealed === 4) {
+      document.getElementById('message').textContent =
+        `נגמרו הרמזים! השיר הוא "${songs[currentIndex].title}" 🎵`;
+    }
+  }
+}
+
+document.getElementById('check').addEventListener('click', checkGuess);
+document.getElementById('reveal').addEventListener('click', revealHint);
+
+function startGame() {
+  revealed = 1;
+  showHints();
+  document.getElementById('message').textContent = '';
+  document.getElementById('guess').value = '';
+}
+startGame();
+</script>
+</body>
+</html>

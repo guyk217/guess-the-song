@@ -82,6 +82,7 @@
 </div>
 
 <script>
+/* ---------- בסיס נתונים/סטייט ---------- */
 const LS_PROGRESS_PREFIX = 'gts_progress_';
 const $ = s=>document.querySelector(s);
 const qs = new URLSearchParams(location.search);
@@ -94,25 +95,20 @@ const btnGuess = $('#btnGuess'), btnReveal = $('#btnReveal'), btnNext = $('#btnN
 const albumCard = $('#albumCard'), albumImg = $('#albumImg'), metaArtist = $('#metaArtist'), metaYear = $('#metaYear');
 const userPill = $('#userPill'), progressEl = $('#progress');
 
-let SONGS = [];     // מתוך הקונפיג
-let i = 0;          // אינדקס שיר
-let revealed = 1;   // מתחילים עם שורה ראשונה גלויה
+let SONGS = [];             // מתוך הקונפיג
+let i = 0;                  // אינדקס שיר פעיל
+let revealedLines = 1;      // ✅ שורה ראשונה תמיד גלויה (לא רמז)
 let metaRevealed = false;
 let endedSong = false;
 
+/* ---------- עזר ---------- */
 userPill.textContent = user || 'אורח';
-
 function norm(s){ return (s||'').toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^\p{L}\p{N}]+/gu,''); }
 function current(){ return SONGS[i]; }
 function progressKey(u){ return LS_PROGRESS_PREFIX + (u||'guest'); }
 function getProgress(u){ try{ return JSON.parse(localStorage.getItem(progressKey(u))||'{}'); }catch(e){ return {}; } }
 function setProgress(u,obj){ localStorage.setItem(progressKey(u), JSON.stringify(obj)); }
-
-async function fetchJSON(url){
-  const res = await fetch(url, {cache:'no-store'});
-  if(!res.ok) throw new Error('Fetch failed: '+url);
-  return res.json();
-}
+async function fetchJSON(url){ const r=await fetch(url,{cache:'no-store'}); if(!r.ok) throw new Error('Fetch failed: '+url); return r.json(); }
 async function loadConfig(){
   if(configFile){ return await fetchJSON(configFile); }
   const m = await fetchJSON('configs/manifest.json');
@@ -121,13 +117,14 @@ async function loadConfig(){
   return await fetchJSON(lv.file);
 }
 
+/* ---------- UI ---------- */
 function lineBox(idx, text, revealedNow){
   const div = document.createElement('div');
   div.className = 'hint' + (revealedNow ? ' revealed':'');
 
   const left = document.createElement('span');
   left.className = 'idx';
-  left.textContent = `שורה ${idx+1}`;
+  left.textContent = `שורה ${idx+1}`; // 1..4
 
   const mid = document.createElement('div');
   mid.className = 'txt';
@@ -136,21 +133,27 @@ function lineBox(idx, text, revealedNow){
   div.append(left, mid);
   return div;
 }
-
 function updateProgressBar(){
-  progressEl.textContent = `שיר ${i+1} / ${SONGS.length} • רמזים: ${Math.min(revealed,4)}/4`;
+  // רמזים שנוצלו = revealedLines - 1 (כי שורה ראשונה לא נחשבת)
+  const usedHints = Math.max(0, revealedLines - 1);
+  progressEl.textContent = `שיר ${i+1} / ${SONGS.length} • רמזים: ${usedHints}/3 • שורות גלויות: ${revealedLines}/4`;
+}
+function updateRevealButton(){
+  // אם 1..3 שורות גלויות → "עוד רמז"; אם 4 גלויות → "גלה לי"
+  btnReveal.textContent = (revealedLines < 4) ? 'עוד רמז' : 'גלה לי';
 }
 
+/* ---------- רינדור שיר ---------- */
 function renderSong(){
   const s = current();
   statusEl.textContent = '';
   endedSong = false;
   metaRevealed = false;
-  revealed = 1; // שורה 1 מהתחלה
+  revealedLines = 1; // ✅ שורה 1 גלויה מההתחלה
 
-  // תמונת אלבום ואמן/שנה (מטושטשים עד רמז)
+  // עטיפה (מטושטשת) + אמן/שנה מטושטשים
   albumImg.src = s.albumArt || '';
-  albumCard.classList.remove('unblur'); // blur ON
+  albumCard.classList.remove('unblur');            // blur ON
   metaArtist.textContent = s.artist || '—';
   metaYear.textContent = s.year || '—';
   metaArtist.classList.add('blurred');
@@ -160,36 +163,38 @@ function renderSong(){
   btnReveal.disabled = false;
   btnGuess.disabled = false;
   guessEl.disabled = false;
-  btnReveal.textContent = 'עוד רמז';
 
-  // מציגים תמיד תרגום הפוך
+  // מציגים תמיד את התרגום (ההיפוך מהמקור)
   const show = s.linesTranslated;
   hintsEl.innerHTML = '';
   for(let k=0;k<4;k++){
-    hintsEl.appendChild(lineBox(k, show[k], k < revealed)); // רק הראשונה גלויה
+    hintsEl.appendChild(lineBox(k, show[k], k < revealedLines)); // רק השורה הראשונה גלויה
   }
 
+  updateRevealButton();
   updateProgressBar();
   guessEl.value='';
   guessEl.focus();
 }
 
-function revealOne(){
+/* ---------- לוגיקת רמזים ---------- */
+function revealOneLine(){
   if(endedSong) return;
-  if(revealed >= 4) return; // כל 4 השורות כבר גלויות
-  revealed++; // פותח בדיוק שורה אחת בכל פעם
-  const s = current();
-  const show = s.linesTranslated;
-  for(let k=0;k<4;k++){
-    const box = hintsEl.children[k];
-    const txt = box.querySelector('.txt');
-    const vis = (k < revealed);
-    box.classList.toggle('revealed', vis);
-    txt.textContent = vis ? show[k] : '???';
+  if(revealedLines < 4){
+    revealedLines += 1; // חושף בדיוק שורה אחת
+    const s = current();
+    const show = s.linesTranslated;
+    for(let k=0;k<4;k++){
+      const box = hintsEl.children[k];
+      const txt = box.querySelector('.txt');
+      const vis = (k < revealedLines);
+      box.classList.toggle('revealed', vis);
+      txt.textContent = vis ? show[k] : '???';
+    }
+    updateRevealButton();
+    updateProgressBar();
   }
-  updateProgressBar();
 }
-
 function revealMeta(){
   if(metaRevealed) return;
   metaRevealed = true;
@@ -200,6 +205,7 @@ function revealMeta(){
   statusEl.textContent='נפתח רמז אמן+שנה.';
 }
 
+/* ---------- ניחוש/סיום ---------- */
 function flipToOriginal(){
   const s = current();
   const orig = s.linesOriginal;
@@ -211,7 +217,6 @@ function flipToOriginal(){
     setTimeout(()=>{ txt.classList.remove('flip'); }, 650);
   }
 }
-
 function onGuess(){
   if(endedSong) return;
   const s = current();
@@ -224,32 +229,33 @@ function onGuess(){
   if(ok){
     endSong(true, `✅ נכון! “${s.title}”`);
   }else{
-    // שגוי → אם עוד לא חושפו כל השורות, פותחים עוד שורה; אם הכל כבר גלוי—רק עדכון סטטוס
-    if(revealed < 4){ revealOne(); statusEl.className='status'; statusEl.textContent='לא נכון — נפתחה שורה נוספת.'; }
-    else { statusEl.className='status'; statusEl.textContent='לא נכון. אפשר להשתמש ברמז אמן+שנה או לעבור הלאה.'; }
+    if(revealedLines < 4){
+      revealOneLine();
+      statusEl.className='status';
+      statusEl.textContent='לא נכון — נפתחה שורה נוספת.';
+    }else{
+      statusEl.className='status';
+      statusEl.textContent='לא נכון. אפשר ללחוץ "גלה לי" לאמן+שנה או להמשיך לנחש.';
+    }
   }
 }
-
 function endSong(win, msg){
   endedSong = true;
   statusEl.textContent = msg;
   statusEl.className = 'status ' + (win ? 'ok' : 'bad');
   btnGuess.disabled = true;
   guessEl.disabled = true;
-  // אפקט היפוך טקסט לתרגום ההפוך (למקור)
   flipToOriginal();
 
-  // עדכון סטטיסטיקות לשלב
+  // סטטיסטיקות: נספר רק בסיום (ניצחון/ויתור אם תוסיף בעתיד)
   const u = user || 'guest';
-  const pk = progressKey(u);
   const prog = getProgress(u);
-  const obj = prog[levelId] || {played:0, won:0};
-  obj.played = (obj.played||0) + 1;
-  if(win) obj.won = (obj.won||0) + 1;
-  prog[levelId] = obj;
+  const cur = prog[levelId] || {played:0, won:0};
+  cur.played = (cur.played||0) + 1;
+  if(win) cur.won = (cur.won||0) + 1;
+  prog[levelId] = cur;
   setProgress(u, prog);
 }
-
 function nextSong(){
   if(i < SONGS.length-1){
     i++;
@@ -260,12 +266,17 @@ function nextSong(){
   }
 }
 
-btnReveal.addEventListener('click', revealOne);
-btnMeta.addEventListener('click', revealMeta);
+/* ---------- אירועים ---------- */
 btnGuess.addEventListener('click', onGuess);
 guessEl.addEventListener('keydown', e=>{ if(e.key==='Enter') onGuess(); });
+btnMeta.addEventListener('click', revealMeta);
+btnReveal.addEventListener('click', ()=>{
+  if(revealedLines < 4) revealOneLine();
+  else revealMeta(); // ✅ כש-4 שורות גלויות, הכפתור הוא "גלה לי"
+});
 btnNext.addEventListener('click', nextSong);
 
+/* ---------- אתחול ---------- */
 (async function init(){
   try{
     const cfg = await loadConfig();

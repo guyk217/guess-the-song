@@ -1,0 +1,6 @@
+{
+  "levels": [
+    { "id": "config1", "title": "שלב 1", "file": "configs/config1.json" },
+    { "id": "config2", "title": "שלב 2", "file": "configs/config2.json" }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "title": "סט פופ 2000–2025 (EN+HE)",
+  "songs": [
+    {
+      "title": "Shape of You",
+      "altTitles": ["Shape of You"],
+      "artist": "Ed Sheeran",
+      "year": 2017,
+      "album": "÷ (Divide)",
+      "lang": "en",
+      "linesOriginal": [
+        "Your shadow sways in the empty room",
+        "Glasses ring in a crowded bar",
+        "My heart tracks your step",
+        "We move where the rhythm pulls"
+      ],
+      "linesTranslated": [
+        "הצל שלך זז בחדר ריק",
+        "כוסות מצלצלות בבר עמוס",
+        "הלב שלי עוקב אחרי הצעד שלך",
+        "אנחנו נמשכים לאן שהקצב מוביל"
+      ]
+    },
+    {
+      "title": "Blinding Lights",
+      "artist": "The Weeknd",
+      "year": 2019,
+      "album": "After Hours",
+      "lang": "en",
+      "linesOriginal": [
+        "Neon nights paint the city",
+        "I race the streets to find you",
+        "Headlights echo like stars",
+        "I can’t see straight without you"
+      ],
+      "linesTranslated": [
+        "לילות ניאון צובעים את העיר",
+        "אני דוהר ברחובות כדי למצוא אותך",
+        "פנסי מכוניות נוצצים כמו כוכבים",
+        "בלעדייך המבט מטושטש"
+      ]
+    },
+    {
+      "title": "Levitating",
+      "artist": "Dua Lipa",
+      "year": 2020,
+      "album": "Future Nostalgia",
+      "lang": "en",
+      "linesOriginal": [
+        "Stardust gathers in our orbit",
+        "You spin a grin into gravity",
+        "We float where music lifts",
+        "Call it love, call it flight"
+      ],
+      "linesTranslated": [
+        "אבק כוכבים נאסף במסלול שלנו",
+        "את מחייכת ומשנה כבידה",
+        "אנחנו מרחפים כשמוזיקה מעלה",
+        "תקראי לזה אהבה, תקראי לזה טיסה"
+      ]
+    },
+    {
+      "title": "Rolling in the Deep",
+      "artist": "Adele",
+      "year": 2010,
+      "album": "21",
+      "lang": "en",
+      "linesOriginal": [
+        "Bridges burn behind the chorus",
+        "The tide drums under my feet",
+        "Your voice haunts empty halls",
+        "I could have had it all"
+      ],
+      "linesTranslated": [
+        "גשרים נשרפים מאחורי הפזמון",
+        "הגאות מתופפת תחת רגליי",
+        "הקול שלך רודף אולמות ריקים",
+        "יכולנו להחזיק את הכל"
+      ]
+    },
+    {
+      "title": "Bad Romance",
+      "artist": "Lady Gaga",
+      "year": 2009,
+      "album": "The Fame Monster",
+      "lang": "en",
+      "linesOriginal": [
+        "A cold whisper in my ear",
+        "A dangerous game of hearts",
+        "I want every side of you",
+        "Fire dressed like a dance"
+      ],
+      "linesTranslated": [
+        "לחישה קרה באוזן",
+        "משחק לבבות מסוכן",
+        "אני רוצה כל צד בך",
+        "אש מחופשת לריקוד"
+      ]
+    },
+    {
+      "title": "שני משוגעים",
+      "artist": "עומר אדם",
+      "year": 2017,
+      "album": "שני משוגעים",
+      "lang": "he",
+      "linesOriginal": [
+        "רחובות ריקים ושקטים",
+        "עיניים מספרות הכול",
+        "שני לבבות באותו קצב",
+        "עולם קטן רק לנו"
+      ],
+      "linesTranslated": [
+        "Empty streets whisper",
+        "Eyes tell everything",
+        "Two hearts on one tempo",
+        "A small world just for us"
+      ]
+    },
+    {
+      "title": "קומי קומי",
+      "artist": "עדן בן זקן",
+      "year": 2018,
+      "album": "תל אביב",
+      "lang": "he",
+      "linesOriginal": [
+        "שחר חדש קורא לנו",
+        "העיר מתמתחת באור",
+        "קפה ראשון וחיוך",
+        "בואי נרוץ ליום החדש"
+      ],
+      "linesTranslated": [
+        "A new dawn calls us",
+        "The city stretches in light",
+        "First coffee and a smile",
+        "Let’s run into the day"
+      ]
+    },
+    {
+      "title": "אם תרצי",
+      "artist": "דודו אהרון",
+      "year": 2021,
+      "album": "שקט שנשאר",
+      "lang": "he",
+      "linesOriginal": [
+        "כוכבים נופלים איתנו",
+        "ידיים שלובות בלי פחד",
+        "העתיד כותב את שמנו",
+        "כל צעד מקרב אותנו"
+      ],
+      "linesTranslated": [
+        "Stars fall with us",
+        "Hands held without fear",
+        "The future writes our names",
+        "Every step draws us closer"
+      ]
+    },
+    {
+      "title": "טודו בום",
+      "artist": "סטטיק ובן-אל תבורי",
+      "year": 2017,
+      "album": "לאסורא",
+      "lang": "he",
+      "linesOriginal": [
+        "קצב חם שובר את הרצפה",
+        "שמש ים וצעדים מהירים",
+        "חיוך שמדליק את הרחוב",
+        "זה בא בבום ולא עוצר"
+      ],
+      "linesTranslated": [
+        "Hot beat cracks the floor",
+        "Sun, sea and quick steps",
+        "A smile lights the street",
+        "It hits with a boom and rolls on"
+      ]
+    },
+    {
+      "title": "מסטיקה",
+      "artist": "אנה זק",
+      "year": 2023,
+      "album": "מסטיקה",
+      "lang": "he",
+      "linesOriginal": [
+        "פופ מתוק על השפתיים",
+        "לילה צבעוני מהבהב",
+        "מילים נדבקות ללב",
+        "רוקדים בלי לחשוב"
+      ],
+      "linesTranslated": [
+        "Sweet pop on my lips",
+        "A flashing, colorful night",
+        "Words that stick to the heart",
+        "We dance without thinking"
+      ]
+    }
+  ]
+}

@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>נחש את השיר • שלבים</title>
 <style>
-  :root{--bg:#fff8dc;--ink:#222;--muted:#6b7280;--card:#fff;--acc:#6c8cff;--ok:#1fa37d;--bad:#ef4444}
+  :root{--bg:#fff8dc;--ink:#222;--muted:#6b7280;--card:#fff;--acc:#6c8cff;--ok:#16a34a;--bad:#ef4444}
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);font-family:system-ui,Segoe UI,Heebo,Roboto,sans-serif;color:var(--ink)}
-  .wrap{max-width:920px;margin:0 auto;padding:18px}
+  .wrap{max-width:1000px;margin:0 auto;padding:18px}
   header{display:flex;justify-content:space-between;align-items:center;gap:10px}
   h1{margin:0;font-size:24px}
   .card{background:var(--card);border:1px solid #e5e7eb;border-radius:16px;box-shadow:0 8px 24px rgba(0,0,0,.06);padding:16px}
@@ -16,16 +16,15 @@
   input,button{font-size:16px;padding:10px 12px;border-radius:10px;border:1px solid #d1d5db}
   button{background:var(--acc);color:#fff;border:0;cursor:pointer}
   button.secondary{background:#eef}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px}
   .level{border:1px solid #e5e7eb;border-radius:14px;padding:12px;background:#fff;display:flex;flex-direction:column;gap:10px}
   .level h3{margin:0;font-size:18px}
   .pill{font-size:12px;background:#eef2ff;color:#1b3b9b;padding:4px 8px;border-radius:999px}
-  .stat{display:flex;align-items:center;gap:8px;color:var(--muted)}
-  .stat .dot{width:10px;height:10px;border-radius:50%;background:#d1d5db}
-  .stat.done .dot{background:var(--ok)}
-  .stat.todo .dot{background:#d1d5db}
+  .stat{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;color:var(--muted);font-size:14px}
+  .bar{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden}
+  .bar>span{display:block;height:100%;background:linear-gradient(90deg,#86efac,#22c55e)}
+  .muted{color:var(--muted);font-size:13px}
   .top{display:flex;justify-content:space-between;align-items:center}
-  .hint{color:var(--muted);font-size:13px}
 </style>
 </head>
 <body>
@@ -42,8 +41,8 @@
 
   <div class="card">
     <div class="row" style="justify-content:space-between;align-items:center">
-      <div class="hint">בחר/י שלב. הסטטוס נשמר פר־משתמש בדפדפן.</div>
-      <span class="pill">קונפיגים נטענים מ־configs/manifest.json</span>
+      <div class="muted">בחר/י שלב. סטטיסטיקות נשמרות פר־משתמש בדפדפן.</div>
+      <span class="pill">קונפיגים מ־configs/manifest.json</span>
     </div>
     <div id="levels" class="grid" aria-live="polite"></div>
   </div>
@@ -51,7 +50,7 @@
 
 <script>
 const LS_USER_KEY = 'gts_user';
-const LS_PROGRESS_PREFIX = 'gts_progress_'; // לכל משתמש
+const LS_PROGRESS_PREFIX = 'gts_progress_'; // לאחסון פר־משתמש: { [levelId]: {played, won} }
 
 const $ = sel => document.querySelector(sel);
 const usernameEl = $('#username');
@@ -60,20 +59,11 @@ const btnLogin = $('#btnLogin');
 const btnLogout = $('#btnLogout');
 const levelsEl = $('#levels');
 
-function getUser(){
-  return localStorage.getItem(LS_USER_KEY) || '';
-}
-function setUser(u){
-  if(u) localStorage.setItem(LS_USER_KEY, u); else localStorage.removeItem(LS_USER_KEY);
-  syncUserUI();
-}
-function progressKey(u){ return LS_PROGRESS_PREFIX + u; }
-function getProgress(u){
-  try{ return JSON.parse(localStorage.getItem(progressKey(u)) || '{}'); }catch(e){ return {}; }
-}
-function setProgress(u, obj){
-  localStorage.setItem(progressKey(u), JSON.stringify(obj));
-}
+function getUser(){ return localStorage.getItem(LS_USER_KEY) || ''; }
+function setUser(u){ if(u) localStorage.setItem(LS_USER_KEY,u); else localStorage.removeItem(LS_USER_KEY); syncUserUI(); }
+function progressKey(u){ return LS_PROGRESS_PREFIX + (u||'guest'); }
+function getProgress(u){ try{ return JSON.parse(localStorage.getItem(progressKey(u))||'{}'); }catch(e){ return {}; } }
+function setProgress(u,obj){ localStorage.setItem(progressKey(u), JSON.stringify(obj)); }
 
 function syncUserUI(){
   const u = getUser();
@@ -89,46 +79,50 @@ function syncUserUI(){
     helloEl.style.display='none';
     btnLogout.style.display='none';
   }
-  renderLevels(); // כדי לצבוע DONE/TO-DO
+  renderLevels();
 }
-
 btnLogin.addEventListener('click', ()=>{
   const u = usernameEl.value.trim();
   if(!u) return alert('נא להזין שם משתמש');
   setUser(u);
 });
-btnLogout.addEventListener('click', ()=>{ setUser(''); });
+btnLogout.addEventListener('click', ()=> setUser('') );
 
 async function fetchJSON(url){
   const res = await fetch(url, {cache:'no-store'});
   if(!res.ok) throw new Error('Fetch failed: '+url);
   return res.json();
 }
-
 async function loadManifest(){
-  // אתה מוסיף קבצים ל-configs/ ומעדכן manifest.json
   const m = await fetchJSON('configs/manifest.json');
   if(!m || !Array.isArray(m.levels)) throw new Error('manifest.json must have { levels: [...] }');
   return m.levels;
 }
 
-function levelCard(lv, done){
+function levelCard(lv, stats){
+  const played = stats?.played||0, won = stats?.won||0;
+  const pct = played ? Math.round((won/played)*100) : 0;
+
   const div = document.createElement('div');
   div.className='level';
+
   const top = document.createElement('div');
   top.className='top';
-  const h = document.createElement('h3');
-  h.textContent = lv.title;
-  const right = document.createElement('div');
-  right.innerHTML = `<span class="pill">${lv.id}</span>`;
-  top.append(h, right);
+  const h = document.createElement('h3'); h.textContent = lv.title;
+  const idpill = document.createElement('span'); idpill.className='pill'; idpill.textContent = lv.id;
+  top.append(h,idpill);
 
   const stat = document.createElement('div');
-  stat.className = 'stat ' + (done ? 'done' : 'todo');
-  stat.innerHTML = `<span class="dot"></span><span>${done ? 'הושלם' : 'טרם הושלם'}</span>`;
+  stat.className='stat';
+  const label = document.createElement('div');
+  label.textContent = `ניצחונות: ${won} / ניסיונות: ${played} (${pct}%)`;
+  const bar = document.createElement('div'); bar.className='bar';
+  const fill = document.createElement('span'); fill.style.width = pct + '%';
+  bar.append(fill);
+  stat.append(label, bar);
 
   const btn = document.createElement('button');
-  btn.textContent = 'שחק/י';
+  btn.textContent = 'שחק/י שלב';
   btn.addEventListener('click', ()=>{
     const u = getUser() || '';
     const qs = new URLSearchParams({level: lv.id, file: lv.file, user: u});
@@ -147,21 +141,17 @@ async function renderLevels(){
     const u = getUser() || '';
     const prog = getProgress(u);
     levels.forEach(lv=>{
-      const done = !!prog?.[lv.id];
-      levelsEl.appendChild(levelCard(lv, done));
+      const stats = prog?.[lv.id] || {played:0, won:0};
+      levelsEl.appendChild(levelCard(lv, stats));
     });
   }catch(err){
     console.error(err);
-    levelsEl.innerHTML = 'שגיאה בטעינת השלבים. ודא שקיים configs/manifest.json תקין.';
+    levelsEl.innerHTML = 'שגיאה בטעינה. ודא שקיים configs/manifest.json תקין.';
   }
 }
 
 // init
-(function init(){
-  const u = getUser();
-  if(u){ usernameEl.value = u; }
-  syncUserUI();
-})();
+(function init(){ const u=getUser(); if(u){ usernameEl.value=u; } syncUserUI(); })();
 </script>
 </body>
 </html>
